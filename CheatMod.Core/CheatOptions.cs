@@ -64,8 +64,9 @@ public class CheatOptions
 
             _instance = newCheatOptions;
         }
-
-        _instance.ConfigChanged += () =>
+        
+        // Use Instance instead of _instance to ensure the object is created if no config file exists
+        Instance.ConfigChanged += () =>
         {
             new Task(() =>
             {

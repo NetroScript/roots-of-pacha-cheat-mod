@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 using SodaDen.Pacha;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace CheatMod.Core.Patches;
 
@@ -17,13 +17,18 @@ public partial class CheatModPatches
         return false;
     }
 
-    [HarmonyPatch(typeof(TreeEntity), "FruitToDrop", MethodType.Getter)]
-    [HarmonyPostfix]
-    private static void InfiniteTreeHarvestPatch(TreeEntity __instance, ref MagneticItemData[] __result)
+    [HarmonyPatch(typeof(TreeEntity), "ShakeAndDropFruit")]
+    [HarmonyPrefix]
+    private static bool InfiniteTreeHarvestPatch(TreeEntity __instance)
     {
         if (!CheatOptions.Instance.IsInfiniteHarvestEnabled.Value)
-            return;
+            return true;
 
-        for (var i = 0; i < __result.Length; i++) __result[i].ID = $"{__result[i].ID}-${Random.Range(1, int.MaxValue)}";
+        // TODO: Reimplement infinite tree harvest
+        // Problem: This new function does not return a value which is used, so the value cannot be patched 
+        // Meaning either the IL code needs to be modified, or the function needs to be duplicated here, which 
+        // will likely break with future updates
+        
+        return true;
     }
 }

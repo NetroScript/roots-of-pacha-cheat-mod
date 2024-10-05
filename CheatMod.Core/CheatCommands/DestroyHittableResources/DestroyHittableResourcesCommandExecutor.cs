@@ -48,23 +48,23 @@ public class DestroyHittableResourcesCommandExecutor : CheatCommandExecutor<Dest
 
     private void ProcessCaveOresShims(float range, PlayerStageController psc, CaveRoomEntity caveRoom)
     {
-        foreach (var shim in caveRoom.CurrentCaveOresShims.Where(sh => sh != null))
+        foreach (var shim in caveRoom.CurrentCaveOresShims.Where(sh => sh.Value != null))
         {
-            if (Vector2.Distance(shim.transform.position, psc.transform.position) >= range || shim.CurrentHealth <= 0f)
+            if (Vector2.Distance(shim.Value.transform.position, psc.transform.position) >= range || shim.Value.CurrentHealth <= 0f)
                 continue;
 
-            var healthComponent = GetHealthComponentFromShim(shim);
+            var healthComponent = GetHealthComponentFromShim(shim.Value);
             if (healthComponent != null && healthComponent.CurrentHealth > 0f)
             {
                 healthComponent.DecreaseHealth(healthComponent.CurrentHealth);
             }
 
             if (Application.isPlaying)
-                caveRoom.Pool.Release(shim);
+                caveRoom.Pool.Release(shim.Value);
             else
-                Object.DestroyImmediate(shim.gameObject);
+                Object.DestroyImmediate(shim.Value.gameObject);
 
-            caveRoom.CurrentCaveOresShims.Remove(shim);
+            caveRoom.CurrentCaveOresShims.Remove(shim.Key);
         }
     }
 
